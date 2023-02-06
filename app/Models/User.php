@@ -39,6 +39,7 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
+        'approved',
         'remember_token',
         'created_at',
         'updated_at',
