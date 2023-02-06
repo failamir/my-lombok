@@ -7,4 +7,5 @@ return [
     'available_languages' => [
         'id' => 'Indonesian',
     ],
+    'registration_default_role' => '2',
 ];
