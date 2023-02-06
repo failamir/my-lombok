@@ -9,6 +9,7 @@ Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
 
+Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
 Auth::routes();
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
