@@ -12,7 +12,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia, HasFactory;
+    use SoftDeletes;
+    use InteractsWithMedia;
+    use HasFactory;
 
     public $table = 'products';
 

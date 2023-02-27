@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductCategoryController extends Controller
 {
-    use MediaUploadingTrait, CsvImportTrait;
+    use MediaUploadingTrait;
+    use CsvImportTrait;
 
     public function index()
     {
