@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use \DateTimeInterface;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,15 +12,13 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductCategory extends Model implements HasMedia
 {
-    use SoftDeletes;
-    use InteractsWithMedia;
-    use HasFactory;
-
-    public $table = 'product_categories';
+    use SoftDeletes, InteractsWithMedia, HasFactory;
 
     protected $appends = [
         'photo',
     ];
+
+    public $table = 'product_categories';
 
     protected $dates = [
         'created_at',
@@ -35,6 +33,11 @@ class ProductCategory extends Model implements HasMedia
         'updated_at',
         'deleted_at',
     ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -52,10 +55,5 @@ class ProductCategory extends Model implements HasMedia
         }
 
         return $file;
-    }
-
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format('Y-m-d H:i:s');
     }
 }

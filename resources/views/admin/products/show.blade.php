@@ -33,6 +33,32 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.product.fields.category') }}
+                        </th>
+                        <td>
+                            @foreach($product->categories as $key => $category)
+                                <span class="label label-info">{{ $category->name }}</span>
+                            @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.etalase') }}
+                        </th>
+                        <td>
+                            {{ $product->etalase->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.condition') }}
+                        </th>
+                        <td>
+                            {{ App\Models\Product::CONDITION_RADIO[$product->condition] ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.product.fields.description') }}
                         </th>
                         <td>
@@ -45,16 +71,6 @@
                         </th>
                         <td>
                             {{ $product->price }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.product.fields.category') }}
-                        </th>
-                        <td>
-                            @foreach($product->categories as $key => $category)
-                                <span class="label label-info">{{ $category->name }}</span>
-                            @endforeach
                         </td>
                     </tr>
                     <tr>
@@ -72,11 +88,115 @@
                             {{ trans('cruds.product.fields.photo') }}
                         </th>
                         <td>
-                            @if($product->photo)
-                                <a href="{{ $product->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $product->photo->getUrl('thumb') }}">
+                            @foreach($product->photo as $key => $media)
+                                <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $media->getUrl('thumb') }}">
                                 </a>
-                            @endif
+                            @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.video_product') }}
+                        </th>
+                        <td>
+                            {{ $product->video_product }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.status_product') }}
+                        </th>
+                        <td>
+                            {{ App\Models\Product::STATUS_PRODUCT_RADIO[$product->status_product] ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.stock') }}
+                        </th>
+                        <td>
+                            {{ $product->stock }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.sku') }}
+                        </th>
+                        <td>
+                            {{ $product->sku }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.minimum_order') }}
+                        </th>
+                        <td>
+                            {{ $product->minimum_order }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.unit_price') }}
+                        </th>
+                        <td>
+                            {{ $product->unit_price }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.wholesale_price') }}
+                        </th>
+                        <td>
+                            {{ $product->wholesale_price }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.weight') }}
+                        </th>
+                        <td>
+                            {{ $product->weight }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.long') }}
+                        </th>
+                        <td>
+                            {{ $product->long }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.width') }}
+                        </th>
+                        <td>
+                            {{ $product->width }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.height') }}
+                        </th>
+                        <td>
+                            {{ $product->height }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.insurance') }}
+                        </th>
+                        <td>
+                            {{ App\Models\Product::INSURANCE_RADIO[$product->insurance] ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.product.fields.pre_order') }}
+                        </th>
+                        <td>
+                            {{ App\Models\Product::PRE_ORDER_SELECT[$product->pre_order] ?? '' }}
                         </td>
                     </tr>
                 </tbody>

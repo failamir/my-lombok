@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyProductCategoryRequest;
 use App\Http\Requests\StoreProductCategoryRequest;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductCategoryController extends Controller
 {
-    use MediaUploadingTrait;
+    use MediaUploadingTrait, CsvImportTrait;
 
     public function index()
     {
@@ -60,7 +61,7 @@ class ProductCategoryController extends Controller
         $productCategory->update($request->all());
 
         if ($request->input('photo', false)) {
-            if (!$productCategory->photo || $request->input('photo') !== $productCategory->photo->file_name) {
+            if (! $productCategory->photo || $request->input('photo') !== $productCategory->photo->file_name) {
                 if ($productCategory->photo) {
                     $productCategory->photo->delete();
                 }
@@ -91,7 +92,11 @@ class ProductCategoryController extends Controller
 
     public function massDestroy(MassDestroyProductCategoryRequest $request)
     {
-        ProductCategory::whereIn('id', request('ids'))->delete();
+        $productCategories = ProductCategory::find(request('ids'));
+
+        foreach ($productCategories as $productCategory) {
+            $productCategory->delete();
+        }
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

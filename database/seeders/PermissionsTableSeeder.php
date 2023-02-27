@@ -140,6 +140,94 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 33,
+                'title' => 'user_alert_create',
+            ],
+            [
+                'id'    => 34,
+                'title' => 'user_alert_show',
+            ],
+            [
+                'id'    => 35,
+                'title' => 'user_alert_delete',
+            ],
+            [
+                'id'    => 36,
+                'title' => 'user_alert_access',
+            ],
+            [
+                'id'    => 37,
+                'title' => 'audit_log_show',
+            ],
+            [
+                'id'    => 38,
+                'title' => 'audit_log_access',
+            ],
+            [
+                'id'    => 39,
+                'title' => 'faq_management_access',
+            ],
+            [
+                'id'    => 40,
+                'title' => 'faq_category_create',
+            ],
+            [
+                'id'    => 41,
+                'title' => 'faq_category_edit',
+            ],
+            [
+                'id'    => 42,
+                'title' => 'faq_category_show',
+            ],
+            [
+                'id'    => 43,
+                'title' => 'faq_category_delete',
+            ],
+            [
+                'id'    => 44,
+                'title' => 'faq_category_access',
+            ],
+            [
+                'id'    => 45,
+                'title' => 'faq_question_create',
+            ],
+            [
+                'id'    => 46,
+                'title' => 'faq_question_edit',
+            ],
+            [
+                'id'    => 47,
+                'title' => 'faq_question_show',
+            ],
+            [
+                'id'    => 48,
+                'title' => 'faq_question_delete',
+            ],
+            [
+                'id'    => 49,
+                'title' => 'faq_question_access',
+            ],
+            [
+                'id'    => 50,
+                'title' => 'etalase_create',
+            ],
+            [
+                'id'    => 51,
+                'title' => 'etalase_edit',
+            ],
+            [
+                'id'    => 52,
+                'title' => 'etalase_show',
+            ],
+            [
+                'id'    => 53,
+                'title' => 'etalase_delete',
+            ],
+            [
+                'id'    => 54,
+                'title' => 'etalase_access',
+            ],
+            [
+                'id'    => 55,
                 'title' => 'profile_password_edit',
             ],
         ];
