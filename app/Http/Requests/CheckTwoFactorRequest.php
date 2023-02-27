@@ -14,7 +14,8 @@ class CheckTwoFactorRequest extends FormRequest
      */
     public function authorize()
     {
-        abort_if(auth()->user()->two_factor_code === null,
+        abort_if(
+            auth()->user()->two_factor_code === null,
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );

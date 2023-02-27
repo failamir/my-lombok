@@ -16,7 +16,9 @@ use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    use SoftDeletes, Notifiable, HasFactory;
+    use SoftDeletes;
+    use Notifiable;
+    use HasFactory;
 
     public $table = 'users';
 

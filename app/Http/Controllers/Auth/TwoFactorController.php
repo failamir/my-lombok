@@ -13,7 +13,8 @@ class TwoFactorController extends Controller
 {
     public function show()
     {
-        abort_if(auth()->user()->two_factor_code === null,
+        abort_if(
+            auth()->user()->two_factor_code === null,
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );
@@ -38,7 +39,8 @@ class TwoFactorController extends Controller
 
     public function resend()
     {
-        abort_if(auth()->user()->two_factor_code === null,
+        abort_if(
+            auth()->user()->two_factor_code === null,
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );

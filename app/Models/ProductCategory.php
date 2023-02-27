@@ -12,7 +12,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductCategory extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia, HasFactory;
+    use SoftDeletes;
+    use InteractsWithMedia;
+    use HasFactory;
 
     protected $appends = [
         'photo',
