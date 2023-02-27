@@ -20,7 +20,7 @@ class ProductApiController extends Controller
     {
         abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new ProductResource(Product::with(['categories', 'tags'])->get());
+        return new ProductResource(Product::with(['categories', 'etalase', 'tags'])->get());
     }
 
     public function store(StoreProductRequest $request)
@@ -28,8 +28,8 @@ class ProductApiController extends Controller
         $product = Product::create($request->all());
         $product->categories()->sync($request->input('categories', []));
         $product->tags()->sync($request->input('tags', []));
-        if ($request->input('photo', false)) {
-            $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        foreach ($request->input('photo', []) as $file) {
+            $product->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photo');
         }
 
         return (new ProductResource($product))
@@ -41,7 +41,7 @@ class ProductApiController extends Controller
     {
         abort_if(Gate::denies('product_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new ProductResource($product->load(['categories', 'tags']));
+        return new ProductResource($product->load(['categories', 'etalase', 'tags']));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -49,15 +49,18 @@ class ProductApiController extends Controller
         $product->update($request->all());
         $product->categories()->sync($request->input('categories', []));
         $product->tags()->sync($request->input('tags', []));
-        if ($request->input('photo', false)) {
-            if (!$product->photo || $request->input('photo') !== $product->photo->file_name) {
-                if ($product->photo) {
-                    $product->photo->delete();
+        if (count($product->photo) > 0) {
+            foreach ($product->photo as $media) {
+                if (! in_array($media->file_name, $request->input('photo', []))) {
+                    $media->delete();
                 }
-                $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
             }
-        } elseif ($product->photo) {
-            $product->photo->delete();
+        }
+        $media = $product->photo->pluck('file_name')->toArray();
+        foreach ($request->input('photo', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $product->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photo');
+            }
         }
 
         return (new ProductResource($product))

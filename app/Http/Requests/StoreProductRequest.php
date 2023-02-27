@@ -21,20 +21,55 @@ class StoreProductRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'price' => [
-                'required',
-            ],
             'categories.*' => [
                 'integer',
             ],
             'categories' => [
                 'array',
             ],
+            'price' => [
+                'required',
+            ],
             'tags.*' => [
                 'integer',
             ],
             'tags' => [
                 'array',
+            ],
+            'photo' => [
+                'array',
+            ],
+            'video_product' => [
+                'string',
+                'nullable',
+            ],
+            'stock' => [
+                'nullable',
+                'integer',
+                'min:-2147483648',
+                'max:2147483647',
+            ],
+            'sku' => [
+                'string',
+                'nullable',
+            ],
+            'minimum_order' => [
+                'nullable',
+                'integer',
+                'min:-2147483648',
+                'max:2147483647',
+            ],
+            'weight' => [
+                'numeric',
+            ],
+            'long' => [
+                'numeric',
+            ],
+            'width' => [
+                'numeric',
+            ],
+            'height' => [
+                'numeric',
             ],
         ];
     }

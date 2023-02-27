@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Etalase;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductTag;
@@ -17,13 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
-    use MediaUploadingTrait;
+    use MediaUploadingTrait, CsvImportTrait;
 
     public function index()
     {
         abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $products = Product::with(['categories', 'tags', 'media'])->get();
+        $products = Product::with(['categories', 'etalase', 'tags', 'media'])->get();
 
         return view('admin.products.index', compact('products'));
     }
@@ -34,9 +36,11 @@ class ProductController extends Controller
 
         $categories = ProductCategory::pluck('name', 'id');
 
+        $etalases = Etalase::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $tags = ProductTag::pluck('name', 'id');
 
-        return view('admin.products.create', compact('categories', 'tags'));
+        return view('admin.products.create', compact('categories', 'etalases', 'tags'));
     }
 
     public function store(StoreProductRequest $request)
@@ -44,8 +48,8 @@ class ProductController extends Controller
         $product = Product::create($request->all());
         $product->categories()->sync($request->input('categories', []));
         $product->tags()->sync($request->input('tags', []));
-        if ($request->input('photo', false)) {
-            $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        foreach ($request->input('photo', []) as $file) {
+            $product->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photo');
         }
 
         if ($media = $request->input('ck-media', false)) {
@@ -61,11 +65,13 @@ class ProductController extends Controller
 
         $categories = ProductCategory::pluck('name', 'id');
 
+        $etalases = Etalase::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $tags = ProductTag::pluck('name', 'id');
 
-        $product->load('categories', 'tags');
+        $product->load('categories', 'etalase', 'tags');
 
-        return view('admin.products.edit', compact('categories', 'product', 'tags'));
+        return view('admin.products.edit', compact('categories', 'etalases', 'product', 'tags'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -73,15 +79,18 @@ class ProductController extends Controller
         $product->update($request->all());
         $product->categories()->sync($request->input('categories', []));
         $product->tags()->sync($request->input('tags', []));
-        if ($request->input('photo', false)) {
-            if (!$product->photo || $request->input('photo') !== $product->photo->file_name) {
-                if ($product->photo) {
-                    $product->photo->delete();
+        if (count($product->photo) > 0) {
+            foreach ($product->photo as $media) {
+                if (! in_array($media->file_name, $request->input('photo', []))) {
+                    $media->delete();
                 }
-                $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
             }
-        } elseif ($product->photo) {
-            $product->photo->delete();
+        }
+        $media = $product->photo->pluck('file_name')->toArray();
+        foreach ($request->input('photo', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $product->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photo');
+            }
         }
 
         return redirect()->route('admin.products.index');
@@ -91,7 +100,7 @@ class ProductController extends Controller
     {
         abort_if(Gate::denies('product_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $product->load('categories', 'tags');
+        $product->load('categories', 'etalase', 'tags');
 
         return view('admin.products.show', compact('product'));
     }
@@ -107,7 +116,11 @@ class ProductController extends Controller
 
     public function massDestroy(MassDestroyProductRequest $request)
     {
-        Product::whereIn('id', request('ids'))->delete();
+        $products = Product::find(request('ids'));
+
+        foreach ($products as $product) {
+            $product->delete();
+        }
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

@@ -6,6 +6,10 @@
             <a class="btn btn-success" href="{{ route('admin.products.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.product.title_singular') }}
             </a>
+            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+                {{ trans('global.app_csvImport') }}
+            </button>
+            @include('csvImport.modal', ['model' => 'Product', 'route' => 'admin.products.parseCsvImport'])
         </div>
     </div>
 @endcan
@@ -29,19 +33,64 @@
                             {{ trans('cruds.product.fields.name') }}
                         </th>
                         <th>
+                            {{ trans('cruds.product.fields.category') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.etalase') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.condition') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.product.fields.description') }}
                         </th>
                         <th>
                             {{ trans('cruds.product.fields.price') }}
                         </th>
                         <th>
-                            {{ trans('cruds.product.fields.category') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.product.fields.tag') }}
                         </th>
                         <th>
                             {{ trans('cruds.product.fields.photo') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.video_product') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.status_product') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.stock') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.sku') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.minimum_order') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.unit_price') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.wholesale_price') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.weight') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.long') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.width') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.height') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.insurance') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.product.fields.pre_order') }}
                         </th>
                         <th>
                             &nbsp;
@@ -61,15 +110,21 @@
                                 {{ $product->name ?? '' }}
                             </td>
                             <td>
+                                @foreach($product->categories as $key => $item)
+                                    <span class="badge badge-info">{{ $item->name }}</span>
+                                @endforeach
+                            </td>
+                            <td>
+                                {{ $product->etalase->name ?? '' }}
+                            </td>
+                            <td>
+                                {{ App\Models\Product::CONDITION_RADIO[$product->condition] ?? '' }}
+                            </td>
+                            <td>
                                 {{ $product->description ?? '' }}
                             </td>
                             <td>
                                 {{ $product->price ?? '' }}
-                            </td>
-                            <td>
-                                @foreach($product->categories as $key => $item)
-                                    <span class="badge badge-info">{{ $item->name }}</span>
-                                @endforeach
                             </td>
                             <td>
                                 @foreach($product->tags as $key => $item)
@@ -77,11 +132,50 @@
                                 @endforeach
                             </td>
                             <td>
-                                @if($product->photo)
-                                    <a href="{{ $product->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                        <img src="{{ $product->photo->getUrl('thumb') }}">
+                                @foreach($product->photo as $key => $media)
+                                    <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
+                                        <img src="{{ $media->getUrl('thumb') }}">
                                     </a>
-                                @endif
+                                @endforeach
+                            </td>
+                            <td>
+                                {{ $product->video_product ?? '' }}
+                            </td>
+                            <td>
+                                {{ App\Models\Product::STATUS_PRODUCT_RADIO[$product->status_product] ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->stock ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->sku ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->minimum_order ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->unit_price ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->wholesale_price ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->weight ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->long ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->width ?? '' }}
+                            </td>
+                            <td>
+                                {{ $product->height ?? '' }}
+                            </td>
+                            <td>
+                                {{ App\Models\Product::INSURANCE_RADIO[$product->insurance] ?? '' }}
+                            </td>
+                            <td>
+                                {{ App\Models\Product::PRE_ORDER_SELECT[$product->pre_order] ?? '' }}
                             </td>
                             <td>
                                 @can('product_show')
